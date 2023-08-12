@@ -25,7 +25,7 @@ exports.findItems = async (link) => {
             }
         }
 
-        console.log(items);
+        return items
     } catch (error) {
         throw error;
     }
