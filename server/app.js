@@ -1,12 +1,9 @@
-const axios = require("axios");
-const jsdom = require("jsdom");
-const express = require("express")
-const { JSDOM } = jsdom;
+const express = require("express");
+const itemsRouter = require("./items/itemsRouter");
 
-const { findItems } = require("./functions")
+const app = express();
 
+app.use(express.json());
+app.use("/", itemsRouter);
 
-
-
-
-findItems("https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2047675.m570.l1313&_nkw=iphone&_sacat=0")
+app.listen(3001, () => console.log("Listening on port 3001"));
