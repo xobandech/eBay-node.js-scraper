@@ -1,39 +1,32 @@
-exports.findItems = (link) => {
-  const items = []
-  axios.get(link).then(function (response) {
-    const dom = new JSDOM(response.data);
-    [...dom.window.document.querySelectorAll(".s-item__title span")].forEach(
-      (el) => {
-        items.push({ title: el.textContent });
-      }
-    );
-    [...dom.window.document.querySelectorAll(".s-item__price")].forEach(
-      async (el, idx) => {
-        items[idx].price = el.textContent;
-      }
-    );
-    [
-      ...dom.window.document.querySelectorAll(".s-item__image-wrapper img"),
-    ].forEach(async (el, idx) => {
-      items[idx].image = el.getAttribute("src");
-    });
-    [...dom.window.document.querySelectorAll(".s-item__link")].forEach(
-      async (el, idx) => {
-        items[idx].ebayLink = el.getAttribute("href");
-      }
-    );
-    const filtered = new Set(items);
-    const filteredArray = [...filtered];
-    const arr = filteredArray.filter((item) => {
-      if (
-        item.title != undefined &&
-        item.price != undefined &&
-        item.image != undefined &&
-        item.title !== "Shop on eBay"
-      )
-        return item;
-      return;
-    });
-    return arr
-  });
+const axios = require("axios");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+exports.findItems = async (link) => {
+    const items = [];
+
+    try {
+        const response = await axios.get(link); // Wait for the GET request to complete
+        const dom = new JSDOM(response.data);
+
+        const titles = [...dom.window.document.querySelectorAll(".s-item__title span")];
+        const prices = [...dom.window.document.querySelectorAll(".s-item__price")];
+        const images = [...dom.window.document.querySelectorAll(".s-item__image-wrapper img")];
+        const links = [...dom.window.document.querySelectorAll(".s-item__link")];
+
+        for (let i = 0; i < titles.length; i++) {
+            const   title = titles[i].textContent;
+            const price = prices[i] && prices[i].textContent;
+            const image = images[i] && images[i].getAttribute("src");
+            const ebayLink = links[i] && links[i].getAttribute("href");
+
+            if (title !== "Shop on eBay" && price !== undefined && image !== undefined) {
+                items.push({ title, price, image, ebayLink });
+            }
+        }
+
+        console.log(items);
+    } catch (error) {
+        throw error;
+    }
 };
