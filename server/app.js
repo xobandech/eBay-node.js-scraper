@@ -1,6 +1,6 @@
 const morgan = require('morgan')
-const express = require("express")
-
+const express = require("express");
+const itemsRouter = require('./items/itemsRouter');
 const app = express();
 
 app.use(express.json());
