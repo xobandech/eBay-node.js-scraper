@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import ItemsList from "../components/ItemsList";
 
 const searchItems = async (query, page = 1) => {
-  return await fetch(`/search?query=${query}`).then((res) => res.json());
+  return await fetch(`/search?query=${query}&page=${page}`).then((res) => res.json());
 };
     
 const SearchResultPage = () => {
@@ -12,8 +12,9 @@ const SearchResultPage = () => {
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get("query");
   const page = queryParams.get("page");
+  console.log(page);
   useEffect(() => {
-    (page > 1 ? searchItems(query) : searchItems(query, page)).then((data) =>
+    (page > 1 ? searchItems(query, page) : searchItems(query)).then((data) =>
       setItems(data.data)
     );
   }, []);
